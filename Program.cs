@@ -42,9 +42,9 @@ namespace Marts
         {
             Addplateau(5, 5);
             AddRover(1, 2, 'N');
-            string res = CommandRover("LMLMLMLMM");
-            Console.WriteLine(res);
             AddRover(3, 3, 'E');
+            string res = CommandRover("LMLMLMLMM");
+            Console.WriteLine(res);         
             res = CommandRover("MMRMMRMRRM");
             Console.WriteLine(res);
             Console.ReadKey();
