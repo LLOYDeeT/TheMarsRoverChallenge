@@ -41,26 +41,34 @@ namespace Marts
         static void Main(string[] args)
         {
             Addplateau(5, 5);
-            AddRover(1, 2, 'N');
-            AddRover(3, 3, 'E');
-            string res = CommandRover("LMLMLMLMM");
-            Console.WriteLine(res);         
-            res = CommandRover("MMRMMRMRRM");
+            AddRover(1, 2, 'n');
+            AddRover(3, 3, 'e');
+            string res = CommandRover("lmLMLMLMM");
+            Console.WriteLine(res);
+            res = CommandRover("mmrMMRMRRM");
             Console.WriteLine(res);
             Console.ReadKey();
         }
 
         static bool ValidDirection(char direction)
         {
-            if (direction == 'N' || direction == 'S' || direction == 'W' || direction == 'E')
-                return true;
+            if (char.IsLetter(direction))
+            {
+                direction = char.ToUpper(direction);
+                if (direction.Equals('N') || direction.Equals('S') || direction.Equals('W') || direction.Equals('E'))
+                    return true;
+            }
 
             return false;
         }
         static bool ValidCommand(char direction)
         {
-            if (direction == 'L' || direction == 'R' || direction == 'M')
-                return true;
+            if (char.IsLetter(direction))
+            {
+                direction = char.ToUpper(direction);
+                if (direction.Equals('L') || direction.Equals('R') || direction.Equals('M'))
+                    return true;
+            }
 
             return false;
         }
@@ -133,37 +141,46 @@ namespace Marts
         static void ChangeRoverDirection(Rover rover, char direction)
         {
             //Change the direction of the rover without moving it
-            switch (direction)
+            if (char.IsLetter(direction))
             {
-                case 'L':
-                    int lpos = (int)rover.Direction - 1;
-                    if (lpos == 0)//the posible pos is 4,3,2,1 and repeat
-                        lpos = 4;
-                    rover.Direction = (RoverDirections)lpos;
-                    break;
-                case 'R':
-                    int rpos = (int)rover.Direction + 1;
-                    if (rpos > 4)//the posible pos is 1,2,3,4 and repeat
-                        rpos = 1;
-                    rover.Direction = (RoverDirections)rpos;
-                    break;
+                direction = char.ToUpper(direction);
+                switch (direction)
+                {
+                    case 'L':
+                        int lpos = (int)rover.Direction - 1;
+                        if (lpos == 0)//the posible pos is 4,3,2,1 and repeat
+                            lpos = 4;
+                        rover.Direction = (RoverDirections)lpos;
+                        break;
+                    case 'R':
+                        int rpos = (int)rover.Direction + 1;
+                        if (rpos > 4)//the posible pos is 1,2,3,4 and repeat
+                            rpos = 1;
+                        rover.Direction = (RoverDirections)rpos;
+                        break;
+                }
             }
         }
 
         static RoverDirections GetRoverDirections(char c)
         {
             //convert the char direction to RoverDirections
-            switch (c)
+            if (char.IsLetter(c))
             {
-                case 'N':
-                    return RoverDirections.N;
-                case 'S':
-                    return RoverDirections.S;
-                case 'W':
-                    return RoverDirections.W;
-                case 'E':
-                    return RoverDirections.E;
+                c = char.ToUpper(c);
+                switch (c)
+                {
+                    case 'N':
+                        return RoverDirections.N;
+                    case 'S':
+                        return RoverDirections.S;
+                    case 'W':
+                        return RoverDirections.W;
+                    case 'E':
+                        return RoverDirections.E;
+                }
             }
+
             return RoverDirections.N;
         }
         static string CommandRover(string args)
@@ -182,16 +199,19 @@ namespace Marts
                         {
                             if (ValidCommand(c))
                             {
-                                switch (c)
+                                if(char.IsLetter(c))
                                 {
-                                    case 'M':
-                                        MoveRover(rovertoMove, plateau);
-                                        break;
-                                    case 'L':
-                                    case 'R':
-                                        ChangeRoverDirection(rovertoMove, c);
-                                        break;
-                                }
+                                    switch (char.ToUpper(c))
+                                    {
+                                        case 'M':
+                                            MoveRover(rovertoMove, plateau);
+                                            break;
+                                        case 'L':
+                                        case 'R':
+                                            ChangeRoverDirection(rovertoMove, c);
+                                            break;
+                                    }
+                                }                               
                             }
                         }
 
