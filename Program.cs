@@ -360,7 +360,6 @@ namespace Marts
                     DisplayErrorMessage("Invalid option.");
                 }
             }
-            Console.ReadKey();
             #endregion
         }
 
