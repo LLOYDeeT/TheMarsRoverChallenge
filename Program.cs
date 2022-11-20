@@ -112,7 +112,7 @@ namespace Marts
             {
                 if (p.GetLength(0) - 1 >= x && p.GetLength(1) - 1 >= y)
                 {
-                    if (p[x, y] == -1)
+                    if (p[x, y] == 0)
                         return p;
                 }
             }
@@ -125,28 +125,28 @@ namespace Marts
             switch (rover.Direction)
             {
                 case RoverDirections.N:
-                    if (rover.Ypos + 1 <= plateau.GetLength(1) - 1 && plateau[rover.Xpos, rover.Ypos + 1] == -1)//move up
+                    if (rover.Ypos + 1 <= plateau.GetLength(1) - 1 && plateau[rover.Xpos, rover.Ypos + 1] == 0)//move up
                     {
                         rover.Ypos += 1;
                         return true;
                     }
                     break;
                 case RoverDirections.S:
-                    if (rover.Ypos - 1 >= 0 && plateau[rover.Xpos, rover.Ypos - 1] == -1)//move down
+                    if (rover.Ypos - 1 >= 0 && plateau[rover.Xpos, rover.Ypos - 1] == 0)//move down
                     {
                         rover.Ypos -= 1;
                         return true;
                     }
                     break;
                 case RoverDirections.W:
-                    if (rover.Xpos - 1 >= 0 && plateau[rover.Xpos - 1, rover.Ypos] == -1)//move left
+                    if (rover.Xpos - 1 >= 0 && plateau[rover.Xpos - 1, rover.Ypos] == 0)//move left
                     {
                         rover.Xpos -= 1;
                         return true;
                     }
                     break;
                 case RoverDirections.E:
-                    if (rover.Xpos + 1 <= plateau.GetLength(0) - 1 && plateau[rover.Xpos + 1, rover.Ypos] == -1)//move right
+                    if (rover.Xpos + 1 <= plateau.GetLength(0) - 1 && plateau[rover.Xpos + 1, rover.Ypos] == 0)//move right
                     {
                         rover.Xpos += 1;
                         return true;
@@ -236,7 +236,7 @@ namespace Marts
                             }
                         }
 
-                        plateau[rovertoMove.Xpos, rovertoMove.Ypos] = 0;
+                        plateau[rovertoMove.Xpos, rovertoMove.Ypos] = -1;
                         return String.Format("{0} {1} {2}", rovertoMove.Xpos, rovertoMove.Ypos, rovertoMove.Direction);
                     }
                     else
@@ -249,19 +249,10 @@ namespace Marts
 
         int[,] Initializeplateau(int x, int y)
         {
-            //This methord intialize the new plateau, meaning -1 all the position are available for the rover to move.
+            //This methord intialize the new plateau, meaning 0 all the position are available for the rover to move.
             if (x >= 0 && y >= 0)
             {
-                int[,] plateau = new int[x, y];
-
-                for (int i = 0; i < x; i++)
-                {
-                    for (int j = 0; j < y; j++)
-                    {
-                        plateau[i, j] = -1;
-                    }
-                }
-                return plateau;
+                return new int[x, y];
             }
             else
             {
