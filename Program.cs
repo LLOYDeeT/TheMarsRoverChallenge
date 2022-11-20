@@ -342,7 +342,7 @@ namespace Marts
                             break;
                         case '3':
                             Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("\nPlease enter the rover command:");
+                            Console.WriteLine("\nPlease enter the rover command (R, L or M):");
                             string cmd = Console.ReadLine();
                             res = theMarsRoverChallenge.CommandRover(cmd);
                             Console.WriteLine("output: {0}", res);
