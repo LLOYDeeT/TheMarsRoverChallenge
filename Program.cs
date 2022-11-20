@@ -37,12 +37,13 @@ namespace Marts
 
     class TheMarsRoverChallenge
     {
-        List<int[,]> plateauList = new List<int[,]>();
-        List<Rover> Rovers = new List<Rover>();
+        List<int[,]> plateauList;
+        List<Rover> Rovers;
 
         public TheMarsRoverChallenge()
         {
-
+            plateauList = new List<int[,]>();
+            Rovers = new List<Rover>();
         }
         bool ValidDirection(char direction)
         {
@@ -68,17 +69,21 @@ namespace Marts
         }
         public void AddRover(int x, int y, char direction)
         {
-            if (ValidDirection(direction))
+            if (x >= 0 && y >= 0 && ValidDirection(direction))
             {
                 Rover rover = new Rover(x, y, GetRoverDirections(direction));
                 Rovers.Add(rover);
             }
+            else
+                Console.WriteLine("\nRover cannot be added, ensure you captured the correct data");
         }
         public void Addplateau(int x, int y)
         {
             int[,] plateau = Initializeplateau(x + 1, y + 1);
             if (plateau.Length > 0)
                 plateauList.Add(plateau);
+            else
+                Console.WriteLine("\nPlateau cannot be added, ensure you captured the correct data");
         }
 
         Rover FindRoverToMove()
@@ -268,9 +273,9 @@ namespace Marts
             theMarsRoverChallenge.AddRover(1, 2, 'n');
             theMarsRoverChallenge.AddRover(3, 3, 'e');
             string res = theMarsRoverChallenge.CommandRover("lmLMLMLMM");
-            Console.WriteLine(res);
+            Console.WriteLine("output: {0}", res);
             res = theMarsRoverChallenge.CommandRover("mmrMMRMRRM");
-            Console.WriteLine(res);
+            Console.WriteLine("output: {0}",res);
             #endregion
             #region user command test
             bool endapp = false;
@@ -324,7 +329,7 @@ namespace Marts
                             Console.WriteLine("\nPlease enter the rover command:");
                             string cmd = Console.ReadLine();
                             res = theMarsRoverChallenge.CommandRover(cmd);
-                            Console.WriteLine(res);
+                            Console.WriteLine("output: {0}", res);
                             break;
                         case '4':
                             endapp = true;
