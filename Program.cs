@@ -34,23 +34,17 @@ namespace Marts
             RoverStatus = RoverStatus.NotMoved;
         }
     }
-    internal class Program
-    {
-        static List<int[,]> plateauList = new List<int[,]>();
-        static List<Rover> Rovers = new List<Rover>();
-        static void Main(string[] args)
-        {
-            Addplateau(5, 5);
-            AddRover(1, 2, 'n');
-            AddRover(3, 3, 'e');
-            string res = CommandRover("lmLMLMLMM");
-            Console.WriteLine(res);
-            res = CommandRover("mmrMMRMRRM");
-            Console.WriteLine(res);
-            Console.ReadKey();
-        }
 
-        static bool ValidDirection(char direction)
+    class TheMarsRoverChallenge
+    {
+        List<int[,]> plateauList = new List<int[,]>();
+        List<Rover> Rovers = new List<Rover>();
+
+        public TheMarsRoverChallenge()
+        {
+
+        }
+        bool ValidDirection(char direction)
         {
             if (char.IsLetter(direction))
             {
@@ -61,7 +55,7 @@ namespace Marts
 
             return false;
         }
-        static bool ValidCommand(char direction)
+        bool ValidCommand(char direction)
         {
             if (char.IsLetter(direction))
             {
@@ -72,7 +66,7 @@ namespace Marts
 
             return false;
         }
-        static void AddRover(int x, int y, char direction)
+        public void AddRover(int x, int y, char direction)
         {
             if (ValidDirection(direction))
             {
@@ -80,14 +74,14 @@ namespace Marts
                 Rovers.Add(rover);
             }
         }
-        static void Addplateau(int x, int y)
+        public void Addplateau(int x, int y)
         {
             int[,] plateau = Initializeplateau(x + 1, y + 1);
             if (plateau.Length > 0)
                 plateauList.Add(plateau);
         }
 
-        static Rover FindRoverToMove()
+        Rover FindRoverToMove()
         {
             //Assumption, we can only move the rover if it is not moved yet in the list of rovers
             foreach (Rover rover in Rovers)
@@ -100,7 +94,7 @@ namespace Marts
             return null;
         }
 
-        static int[,] FindPlateau(int x, int y)
+        int[,] FindPlateau(int x, int y)
         {
             //find a Plateau where a rover can be successfully be positioned
             foreach (int[,] p in plateauList)
@@ -114,31 +108,45 @@ namespace Marts
             return Initializeplateau(0, 0);
         }
 
-        static void MoveRover(Rover rover, int[,] plateau)
+        bool MoveRover(Rover rover, int[,] plateau)
         {
             //move the rover in the rover direction: N = up, S = down, W = left and E = right 
             switch (rover.Direction)
             {
                 case RoverDirections.N:
                     if (rover.Ypos + 1 <= plateau.GetLength(1) && plateau[rover.Xpos, rover.Ypos + 1] == -1)//move up
+                    {
                         rover.Ypos += 1;
+                        return true;
+                    }
                     break;
                 case RoverDirections.S:
                     if (rover.Ypos - 1 >= 0 && plateau[rover.Xpos, rover.Ypos - 1] == -1)//move down
+                    {
                         rover.Ypos -= 1;
+                        return true;
+                    }
                     break;
                 case RoverDirections.W:
                     if (rover.Xpos - 1 >= 0 && plateau[rover.Xpos - 1, rover.Ypos] == -1)//move left
+                    {
                         rover.Xpos -= 1;
+                        return true;
+                    }
                     break;
                 case RoverDirections.E:
                     if (rover.Xpos + 1 <= plateau.GetLength(0) && plateau[rover.Xpos + 1, rover.Ypos] == -1)//move right
+                    {
                         rover.Xpos += 1;
+                        return true;
+                    }
                     break;
             }
+
+            return false;
         }
 
-        static void ChangeRoverDirection(Rover rover, char direction)
+        void ChangeRoverDirection(Rover rover, char direction)
         {
             //Change the direction of the rover without moving it
             if (char.IsLetter(direction))
@@ -162,7 +170,7 @@ namespace Marts
             }
         }
 
-        static RoverDirections GetRoverDirections(char c)
+        RoverDirections GetRoverDirections(char c)
         {
             //convert the char direction to RoverDirections
             if (char.IsLetter(c))
@@ -183,7 +191,7 @@ namespace Marts
 
             return RoverDirections.N;
         }
-        static string CommandRover(string args)
+        public string CommandRover(string args)
         {
             //This methord command the rover if there is avalable rover that can move, then find a plateau where the rover can be position successfully then move the rovr based in the user commands
             if (Rovers.Count > 0)
@@ -194,24 +202,26 @@ namespace Marts
                     int[,] plateau = FindPlateau(rovertoMove.Xpos, rovertoMove.Ypos);
                     if (plateau.Length > 0)
                     {
-                        rovertoMove.RoverStatus = RoverStatus.Moved;
                         foreach (char c in args)
                         {
                             if (ValidCommand(c))
                             {
-                                if(char.IsLetter(c))
+                                if (char.IsLetter(c))
                                 {
                                     switch (char.ToUpper(c))
                                     {
                                         case 'M':
-                                            MoveRover(rovertoMove, plateau);
+                                            if (MoveRover(rovertoMove, plateau) && rovertoMove.RoverStatus != RoverStatus.Moved)
+                                            {
+                                                rovertoMove.RoverStatus = RoverStatus.Moved;//Assumeption the rover is moved when a succussfully moved has been completed, the rover can still return to its original location but I will regards it as moved.
+                                            }
                                             break;
                                         case 'L':
                                         case 'R':
-                                            ChangeRoverDirection(rovertoMove, c);
+                                            ChangeRoverDirection(rovertoMove, c);//Assumeption; if the rover change orentation will regards it as not moved
                                             break;
                                     }
-                                }                               
+                                }
                             }
                         }
 
@@ -225,7 +235,8 @@ namespace Marts
 
             return string.Empty;
         }
-        static int[,] Initializeplateau(int x, int y)
+
+        int[,] Initializeplateau(int x, int y)
         {
             //This methord intialize the new plateau, meaning -1 all the position are available for the rover to move.
             if (x >= 0 && y >= 0)
@@ -245,6 +256,99 @@ namespace Marts
             {
                 return Initializeplateau(0, 0);
             }
+        }
+
+    }
+    internal class Program
+    {
+        enum ProcessType
+        {
+            Invalid,
+            AddPlateau,
+            AddRover,
+            CommandRover
+        }
+        static void Main(string[] args)
+        {
+            #region hard coded test
+            TheMarsRoverChallenge theMarsRoverChallenge = new TheMarsRoverChallenge();
+            theMarsRoverChallenge.Addplateau(5, 5);
+            theMarsRoverChallenge.AddRover(1, 2, 'n');
+            theMarsRoverChallenge.AddRover(3, 3, 'e');
+            string res = theMarsRoverChallenge.CommandRover("lmLMLMLMM");
+            Console.WriteLine(res);
+            res = theMarsRoverChallenge.CommandRover("mmrMMRMRRM");
+            Console.WriteLine(res);
+            #endregion
+            #region user command test
+            bool endapp = false;
+            Console.WriteLine("Welcome to The Mars Rover Challenge App");
+            theMarsRoverChallenge = new TheMarsRoverChallenge();
+            while (!endapp)
+            {
+                Console.WriteLine("\nPress 1 to Add Add Plateau, 2 to Add Rover, 3 to commaand Rover, 4 to exit the app");
+                char input = Console.ReadKey().KeyChar;
+                if (char.IsDigit(input))
+                {
+                    switch (input)
+                    {
+                        case '1':
+                            Console.WriteLine("\nPlease enter the plateau in a format X Y Direction e.g. 0 0");
+                            string plateaustr = Console.ReadLine();
+                            string[] plateauA = plateaustr.Split(' ');
+                            if (plateauA.Length == 2)
+                            {
+                                if (int.TryParse(plateauA[0], out int x) && int.TryParse(plateauA[1], out int y))
+                                {
+                                    theMarsRoverChallenge.Addplateau(x, y);
+                                }
+                                else
+                                    Console.WriteLine("\nInvalid format");
+                            }
+                            else
+                            {
+                                Console.WriteLine("\nInvalid format");
+                            }
+                            break;
+                        case '2':
+                            Console.WriteLine("\nPlease enter the rover in a format X Y Direction e.g. 0 0 N:");
+                            string rvr = Console.ReadLine();
+                            string[] RoverA = rvr.Split(' ');
+                            if (RoverA.Length == 3)
+                            {
+                                if (int.TryParse(RoverA[0], out int x) && int.TryParse(RoverA[1], out int y) && RoverA[2].Length == 1)
+                                {
+                                    theMarsRoverChallenge.AddRover(x, y, RoverA[2][0]);
+                                }
+                                else
+                                    Console.WriteLine("\nInvalid format");
+                            }
+                            else
+                            {
+                                Console.WriteLine("\nInvalid format");
+                            }
+                            break;
+                        case '3':
+                            Console.WriteLine("\nPlease enter the rover command:");
+                            string cmd = Console.ReadLine();
+                            res = theMarsRoverChallenge.CommandRover(cmd);
+                            Console.WriteLine(res);
+                            break;
+                        case '4':
+                            endapp = true;
+                            break;
+                        default:
+                            Console.WriteLine("\nInvalid option");
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid option");
+                }
+            }
+            Console.ReadKey();
+            #endregion
         }
     }
 }
