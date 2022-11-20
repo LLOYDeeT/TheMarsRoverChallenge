@@ -260,13 +260,6 @@ namespace Marts
     }
     internal class Program
     {
-        enum ProcessType
-        {
-            Invalid,
-            AddPlateau,
-            AddRover,
-            CommandRover
-        }
         static void Main(string[] args)
         {
             #region hard coded test
