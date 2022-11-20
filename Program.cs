@@ -104,7 +104,7 @@ namespace Marts
             //find a Plateau where a rover can be successfully be positioned
             foreach (int[,] p in plateauList)
             {
-                if (p.GetLength(0) >= x && p.GetLength(1) >= y)
+                if (p.GetLength(0) - 1 >= x && p.GetLength(1) - 1 >= y)
                 {
                     if (p[x, y] == -1)
                         return p;
@@ -119,7 +119,7 @@ namespace Marts
             switch (rover.Direction)
             {
                 case RoverDirections.N:
-                    if (rover.Ypos + 1 <= plateau.GetLength(1) && plateau[rover.Xpos, rover.Ypos + 1] == -1)//move up
+                    if (rover.Ypos + 1 <= plateau.GetLength(1) - 1 && plateau[rover.Xpos, rover.Ypos + 1] == -1)//move up
                     {
                         rover.Ypos += 1;
                         return true;
@@ -140,7 +140,7 @@ namespace Marts
                     }
                     break;
                 case RoverDirections.E:
-                    if (rover.Xpos + 1 <= plateau.GetLength(0) && plateau[rover.Xpos + 1, rover.Ypos] == -1)//move right
+                    if (rover.Xpos + 1 <= plateau.GetLength(0) - 1 && plateau[rover.Xpos + 1, rover.Ypos] == -1)//move right
                     {
                         rover.Xpos += 1;
                         return true;
@@ -275,21 +275,24 @@ namespace Marts
             string res = theMarsRoverChallenge.CommandRover("lmLMLMLMM");
             Console.WriteLine("output: {0}", res);
             res = theMarsRoverChallenge.CommandRover("mmrMMRMRRM");
-            Console.WriteLine("output: {0}",res);
+            Console.WriteLine("output: {0}", res);
             #endregion
+
             #region user command test
             bool endapp = false;
             Console.WriteLine("Welcome to The Mars Rover Challenge App");
             theMarsRoverChallenge = new TheMarsRoverChallenge();
             while (!endapp)
             {
-                Console.WriteLine("\nPress 1 to Add Add Plateau, 2 to Add Rover, 3 to commaand Rover, 4 to exit the app");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("\n\tPress 1 to Add Plateau\n\tPress 2 to Add Rover\n\tPress 3 to command Rover\n\tPress, 4 to exit the app");
                 char input = Console.ReadKey().KeyChar;
                 if (char.IsDigit(input))
                 {
                     switch (input)
                     {
                         case '1':
+                            Console.ForegroundColor = ConsoleColor.Blue;
                             Console.WriteLine("\nPlease enter the plateau in a format X Y Direction e.g. 0 0");
                             string plateaustr = Console.ReadLine();
                             string[] plateauA = plateaustr.Split(' ');
@@ -308,6 +311,7 @@ namespace Marts
                             }
                             break;
                         case '2':
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("\nPlease enter the rover in a format X Y Direction e.g. 0 0 N:");
                             string rvr = Console.ReadLine();
                             string[] RoverA = rvr.Split(' ');
@@ -326,6 +330,7 @@ namespace Marts
                             }
                             break;
                         case '3':
+                            Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine("\nPlease enter the rover command:");
                             string cmd = Console.ReadLine();
                             res = theMarsRoverChallenge.CommandRover(cmd);
