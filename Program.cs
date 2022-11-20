@@ -75,7 +75,10 @@ namespace Marts
                 Rovers.Add(rover);
             }
             else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("\nRover cannot be added, ensure you captured the correct data");
+            }               
         }
         public void Addplateau(int x, int y)
         {
@@ -83,7 +86,10 @@ namespace Marts
             if (plateau.Length > 0)
                 plateauList.Add(plateau);
             else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("\nPlateau cannot be added, ensure you captured the correct data");
+            }        
         }
 
         Rover FindRoverToMove()
@@ -303,15 +309,17 @@ namespace Marts
                                     theMarsRoverChallenge.Addplateau(x, y);
                                 }
                                 else
-                                    Console.WriteLine("\nInvalid format");
+                                {
+                                    DisplayErrorMessage("Invalid format.");
+                                }
                             }
                             else
                             {
-                                Console.WriteLine("\nInvalid format");
+                                DisplayErrorMessage("Invalid format.");
                             }
                             break;
                         case '2':
-                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine("\nPlease enter the rover in a format X Y Direction e.g. 0 0 N:");
                             string rvr = Console.ReadLine();
                             string[] RoverA = rvr.Split(' ');
@@ -322,11 +330,14 @@ namespace Marts
                                     theMarsRoverChallenge.AddRover(x, y, RoverA[2][0]);
                                 }
                                 else
-                                    Console.WriteLine("\nInvalid format");
+                                {
+                                    DisplayErrorMessage("Invalid format.");
+                                }
+                                   
                             }
                             else
                             {
-                                Console.WriteLine("\nInvalid format");
+                                DisplayErrorMessage("Invalid format.");
                             }
                             break;
                         case '3':
@@ -340,17 +351,23 @@ namespace Marts
                             endapp = true;
                             break;
                         default:
-                            Console.WriteLine("\nInvalid option");
+                            DisplayErrorMessage("Invalid option.");
                             break;
                     }
                 }
                 else
                 {
-                    Console.WriteLine("\nInvalid option");
+                    DisplayErrorMessage("Invalid option.");
                 }
             }
             Console.ReadKey();
             #endregion
+        }
+
+        static void DisplayErrorMessage(string error)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("\n{0}", error);            
         }
     }
 }
