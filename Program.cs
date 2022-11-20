@@ -257,7 +257,6 @@ namespace Marts
                 return Initializeplateau(0, 0);
             }
         }
-
     }
     internal class Program
     {
@@ -344,7 +343,7 @@ namespace Marts
                 }
                 else
                 {
-                    Console.WriteLine("Invalid option");
+                    Console.WriteLine("\nInvalid option");
                 }
             }
             Console.ReadKey();
